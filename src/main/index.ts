@@ -1,11 +1,15 @@
 import { app, BrowserWindow } from 'electron';
 import path from 'node:path';
+import { getDatabase } from './AppDatabase';
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
+      nodeIntegration: true,
+      // contextIsolation: false,
+      
       preload: path.join(__dirname, '../preload/index.js'),
     },
   });
@@ -16,10 +20,14 @@ const createWindow = () => {
     mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'));
   }
 
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
+
 };
 
-app.on('ready', createWindow);
+app.on('ready', async () => {
+  await getDatabase();
+  createWindow();
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
