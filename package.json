@@ -22,7 +22,7 @@
     "@vitejs/plugin-react": "^4.4.1",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
-    "electron": "^39.0.0",
+    "electron": "^42.0.0",
     "electron-vite": "^5.0.0",
     "patch-package": "^8.0.1",
     "postinstall-postinstall": "^2.1.0",
