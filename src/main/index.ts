@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'node:path';
 import { getDatabase } from './AppDatabase';
 
@@ -23,6 +23,22 @@ const createWindow = () => {
   // mainWindow.webContents.openDevTools();
 
 };
+
+ipcMain.handle("db:saveRecord", async (_event, title: string, markdown: string) => {
+  const db = await getDatabase();
+  const [id] = await db("records").insert({ title, markdown });
+  return id;
+});
+
+ipcMain.handle("db:getRecords", async () => {
+  const db = await getDatabase();
+  return db("records").orderBy("created_at", "desc");
+});
+
+ipcMain.handle("db:deleteRecord", async (_event, id: number) => {
+  const db = await getDatabase();
+  await db("records").where({ id }).del();
+});
 
 app.on('ready', async () => {
   await getDatabase();

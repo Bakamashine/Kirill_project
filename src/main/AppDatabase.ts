@@ -1,29 +1,48 @@
-import { app } from "electron";
 import knex, { Knex } from "knex";
-import path from "node:path";
-import fs from "node:fs";
 
 let db: Knex | null = null;
+export const db_name = "database.db";
 
-const migrations: { name: string; up: (db: Knex) => Promise<void>; down: (db: Knex) => Promise<void> }[] = [
+const migrations: {
+  name: string;
+  up: (db: Knex) => Promise<void>;
+  down: (db: Knex) => Promise<void>;
+}[] = [
   {
-    name: "001_create_users_table",
+    name: "001_create_records_table",
     async up(knex) {
-      const exists = await knex.schema.hasTable("users");
+      const exists = await knex.schema.hasTable("records");
       if (!exists) {
-        await knex.schema.createTable("users", (table) => {
+        await knex.schema.createTable("records", (table) => {
           table.increments("id").primary();
-          table.string("username").notNullable().unique();
-          table.string("email").notNullable().unique();
-          table.string("password_hash").notNullable();
+          table.string("title").nullable().defaultTo("Название отсутствует");
+          table.string("markdown").nullable().defaultTo("Описание отсутствует");
           table.timestamps(true, true);
         });
       }
     },
     async down(knex) {
-      await knex.schema.dropTableIfExists("users");
+      await knex.schema.dropTableIfExists("records");
     },
   },
+  // {
+  //   name: "001_create_users_table",
+  //   async up(knex) {
+  //     const exists = await knex.schema.hasTable("users");
+  //     if (!exists) {
+  //       await knex.schema.createTable("users", (table) => {
+  //         table.increments("id").primary();
+  //         table.string("username").notNullable().unique();
+  //         table.string("email").notNullable().unique();
+  //         table.string("password_hash").notNullable();
+  //         table.timestamps(true, true);
+  //       });
+  //     }
+  //   },
+  //   async down(knex) {
+  //     await knex.schema.dropTableIfExists("users");
+  //   },
+  // },
 ];
 
 async function runMigrations(knexInstance: Knex): Promise<void> {
@@ -35,7 +54,9 @@ async function runMigrations(knexInstance: Knex): Promise<void> {
     });
   }
 
-  const applied = await knexInstance("_migrations").select("name").orderBy("name");
+  const applied = await knexInstance("_migrations")
+    .select("name")
+    .orderBy("name");
   const appliedNames = new Set(applied.map((r: { name: string }) => r.name));
 
   for (const m of migrations) {
@@ -50,15 +71,19 @@ async function runMigrations(knexInstance: Knex): Promise<void> {
 export async function getDatabase(): Promise<Knex> {
   if (db) return db;
 
-  const dbDir = path.join(app.getPath("userData"), "database");
-  if (!fs.existsSync(dbDir)) {
-    fs.mkdirSync(dbDir, { recursive: true });
-  }
+  // const dbDir = path.join(app.getPath("userData"), "database");
+  // const dbDir = path.join("data")
+  // const dbDir = "";
+  // console.log("dbDir: ", dbDir);
+  // if (!fs.existsSync(dbDir)) {
+  //   fs.mkdirSync(dbDir, { recursive: true });
+  // }
 
   db = knex({
-    client: "better-sqlite3",
+    client: "sqlite3",
     connection: {
-      filename: path.join(dbDir, "database.db"),
+      // filename: path.join(dbDir, "database.db"),
+      filename: db_name,
     },
     useNullAsDefault: true,
   });

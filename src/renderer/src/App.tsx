@@ -2,14 +2,14 @@ import { HashRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import About from "./pages/About";
-import CreateInstructions from "./pages/instructions/create_instructions";
+import Create from "./pages/Create";
+import Show from "./pages/Show";
 
 export const _Router = {
   main: "/",
   about: "/about",
-  create_instructions: "create"
+  create: "create",
 };
-
 
 export default function App() {
   return (
@@ -18,7 +18,8 @@ export default function App() {
         <Route element={<Layout />}>
           <Route path={_Router.main} element={<Home />} />
           <Route path={_Router.about} element={<About />} />
-          <Route path={_Router.create_instructions} element={<CreateInstructions />} />
+          <Route path={_Router.create} element={<Create />} />
+          <Route path={`/record/:id`} element={<Show />} />
         </Route>
       </Routes>
     </HashRouter>

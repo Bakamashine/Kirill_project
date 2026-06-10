@@ -90,3 +90,6 @@ typings/
 
 # Electron-Forge
 out/
+*.db
+build_log.txt
+img

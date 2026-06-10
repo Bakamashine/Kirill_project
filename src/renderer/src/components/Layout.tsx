@@ -1,5 +1,4 @@
-import { NavLink, Outlet } from "react-router-dom";
-import { Navbar, Nav, Container } from "react-bootstrap";
+import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 
 export default function Layout() {
@@ -7,7 +6,7 @@ export default function Layout() {
     <>
       <section className="d-flex">
         <Sidebar />
-        <main className="m-5">
+        <main className="m-5 w-100">
           <Outlet />
         </main>
       </section>
