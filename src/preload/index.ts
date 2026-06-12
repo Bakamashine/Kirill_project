@@ -8,6 +8,9 @@ const electronAPI = {
   getRecordById: (id: number) => ipcRenderer.invoke("db:getRecordById", id),
   updateRecord: (id: number, title: string, markdown: string) =>
     ipcRenderer.invoke("db:updateRecord", id, title, markdown),
+  Editor: {
+    addImage: () => ipcRenderer.invoke("editor:addImage"),
+  }
 };
 
 contextBridge.exposeInMainWorld("electronAPI", electronAPI);

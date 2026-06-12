@@ -1,5 +1,6 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, dialog, ipcMain } from "electron";
 import path from "node:path";
+import fs from "node:fs/promises";
 import { getDatabase } from "./AppDatabase";
 
 let db: Awaited<ReturnType<typeof getDatabase>>;
@@ -45,6 +46,29 @@ ipcMain.handle("db:updateRecord", async (_event, id: number, title: string, mark
   await db("records").where({ id }).update({ title, markdown });
   return true;
 });
+
+ipcMain.handle("editor:addImage", async () => {
+  const result = await dialog.showOpenDialog({
+    properties: ["openFile"],
+    filters: [{ name: "Images", extensions: ["png", "jpg", "jpeg", "gif", "webp", "bmp"] }],
+  });
+
+  if (result.canceled || result.filePaths.length === 0) return null;
+
+  const srcPath = result.filePaths[0];
+  const ext = path.extname(srcPath);
+  const fileName = `${Date.now()}${ext}`;
+
+  const isDev = !!process.env.ELECTRON_RENDERER_URL;
+  const destDir = isDev
+    ? path.join(app.getAppPath(), "src", "renderer", "public")
+    : path.join(__dirname, "../renderer");
+
+  await fs.mkdir(destDir, { recursive: true });
+  await fs.copyFile(srcPath, path.join(destDir, fileName));
+
+  return fileName;
+})
 
 app.on("ready", async () => {
   db = await getDatabase();

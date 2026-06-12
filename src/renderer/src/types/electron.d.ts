@@ -12,6 +12,9 @@ interface ElectronAPI {
   deleteRecord: (id: number) => Promise<void>;
   getRecordById: (id: number) => Promise<IRecord>;
   updateRecord: (id:number, title: string, markdown: string) => Promise<boolean>;
+  Editor: {
+    addImage: () => Promise<string>
+  }
 }
 
 interface Window {

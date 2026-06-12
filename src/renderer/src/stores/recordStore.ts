@@ -22,6 +22,10 @@ class RecordStore {
     });
   }
 
+  async saveRecord(title: string, markdown: string) {
+    await window.electronAPI.saveRecord(title, markdown);
+    await this.fetchRecords();
+  }
   async deleteRecord(id: number) {
     await window.electronAPI.deleteRecord(id);
     await this.fetchRecords();
