@@ -1,4 +1,6 @@
+import { app } from "electron";
 import knex, { Knex } from "knex";
+import path from "node:path";
 
 let db: Knex | null = null;
 export const db_name = "database.db";
@@ -83,7 +85,8 @@ export async function getDatabase(): Promise<Knex> {
     client: "sqlite3",
     connection: {
       // filename: path.join(dbDir, "database.db"),
-      filename: db_name,
+      // filename: db_name,
+      filename: path.join(app.getPath("userData"), db_name),
     },
     useNullAsDefault: true,
   });
