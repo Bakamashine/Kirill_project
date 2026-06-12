@@ -1,7 +1,12 @@
 import { Editor } from "@monaco-editor/react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Modal } from "react-bootstrap";
+import Markdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
 import { recordStore } from "../stores/recordStore";
 import { useTheme } from "../contexts/ThemeContext";
+import { tipMarkdown } from "../pages/Tip";
+import React, { useState } from "react";
 
 interface RecordFormProps {
   title: string;
@@ -19,6 +24,7 @@ export default function RecordForm({
   onSave,
 }: RecordFormProps) {
   const { theme } = useTheme();
+  const [show, setShow] = useState(false);
 
   const save = async () => {
     if (title && markdown) {
@@ -44,10 +50,30 @@ export default function RecordForm({
 
   return (
     <>
+      <Modal show={show} fullscreen onHide={() => setShow(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Шпаргалка по Markdown</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Markdown
+            rehypePlugins={[rehypeRaw]}
+            remarkPlugins={[remarkGfm]}
+            components={{
+              a: ({ children }) => <span>{children}</span>,
+            }}
+          >
+            {tipMarkdown}
+          </Markdown>
+        </Modal.Body>
+      </Modal>
+
       <h5>Форма:</h5>
       <div className="d-flex">
-        <Button variant="info" onClick={addImage}>
+        <Button className="m-2" variant="info" onClick={addImage}>
           Добавить картинку
+        </Button>
+        <Button variant="info" className="m-2" onClick={() => setShow(true)}>
+          Открыть подсказку
         </Button>
       </div>
       <Form>

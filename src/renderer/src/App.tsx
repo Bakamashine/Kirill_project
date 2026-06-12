@@ -5,6 +5,7 @@ import About from "./pages/About";
 import Create from "./pages/Create";
 import Show from "./pages/Show";
 import Edit from "./pages/Edit";
+import Tip from "./pages/Tip";
 
 export const _Router = {
   main: "/",
@@ -20,6 +21,7 @@ export default function App() {
           <Route path={_Router.main} element={<Home />} />
           <Route path={_Router.about} element={<About />} />
           <Route path={_Router.create} element={<Create />} />
+          <Route path="tip" element={<Tip />} />
           <Route path={`/record/:id`} element={<Show />} />
           <Route path={`/record/:id/edit`} element={<Edit />} />
         </Route>
