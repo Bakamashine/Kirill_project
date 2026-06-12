@@ -5,6 +5,8 @@ import { Container, Row, Col, Form } from "react-bootstrap";
 import { recordStore } from "../stores/recordStore";
 import { useNavigate, useParams } from "react-router-dom";
 import { observer } from "mobx-react-lite";
+import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
 
 const Edit = observer(() => {
   const [title, setTitle] = useState("");
@@ -16,7 +18,7 @@ const Edit = observer(() => {
   const save = async () => {
     if (id) {
       await recordStore.updateRecord(parseInt(id), title, markdown);
-      navigate("/")
+      navigate("/");
     }
   };
 
@@ -64,7 +66,7 @@ const Edit = observer(() => {
         <Col md={6}>
           <h5>Ваш вывод:</h5>
           <div className="markdown-border">
-            <Markdown>{markdown}</Markdown>
+            <Markdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>{markdown}</Markdown>
           </div>
         </Col>
       </Row>

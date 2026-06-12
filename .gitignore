@@ -93,3 +93,5 @@ out/
 *.db
 build_log.txt
 img
+
+src/renderer/public/*

@@ -3,16 +3,19 @@ import { useState } from "react";
 import Markdown from "react-markdown";
 import { Container, Row, Col, Form } from "react-bootstrap";
 import { recordStore } from "../stores/recordStore";
+import rehypeRaw from "rehype-raw";
 
 export default function Create() {
   const [title, setTitle] = useState("");
   const [markdown, setMarkdown] = useState("");
 
   const save = async () => {
-    await window.electronAPI.saveRecord(title, markdown);
-    setTitle("");
-    setMarkdown("");
-    await recordStore.fetchRecords();
+    if (title && markdown) {
+      await window.electronAPI.saveRecord(title, markdown);
+      setTitle("");
+      setMarkdown("");
+      await recordStore.fetchRecords();
+    }
   };
   return (
     <Container className="mt-4">
@@ -47,7 +50,7 @@ export default function Create() {
         <Col md={6}>
           <h5>Ваш вывод:</h5>
           <div className="markdown-border">
-            <Markdown>{markdown}</Markdown>
+            <Markdown rehypePlugins={[rehypeRaw]}>{markdown}</Markdown>
           </div>
         </Col>
       </Row>

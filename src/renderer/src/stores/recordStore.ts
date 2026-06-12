@@ -28,8 +28,12 @@ class RecordStore {
   }
 
   async updateRecord(id: number, title: string, markdown: string) {
-    await window.electronAPI.updateRecord(id, title, markdown);
-    await this.fetchRecords();
+    if (title && markdown) {
+      await window.electronAPI.updateRecord(id, title, markdown);
+      await this.fetchRecords();
+      return true;
+    }
+    return false;
   }
 }
 
