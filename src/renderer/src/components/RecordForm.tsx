@@ -7,6 +7,7 @@ interface RecordFormProps {
   markdown: string;
   onTitleChange: (value: string) => void;
   onMarkdownChange: (value: string) => void;
+  onSave?: (title: string, markdown: string) => Promise<void>;
 }
 
 export default function RecordForm({
@@ -14,12 +15,17 @@ export default function RecordForm({
   markdown,
   onTitleChange,
   onMarkdownChange,
+  onSave,
 }: RecordFormProps) {
   const save = async () => {
     if (title && markdown) {
-      await recordStore.saveRecord(title, markdown);
-      onTitleChange("");
-      onMarkdownChange("");
+      if (onSave) {
+        await onSave(title, markdown);
+      } else {
+        await recordStore.saveRecord(title, markdown);
+        onTitleChange("");
+        onMarkdownChange("");
+      }
     }
   };
 
@@ -27,7 +33,7 @@ export default function RecordForm({
     const fileName = await window.electronAPI.Editor.addImage();
     if (fileName) {
       onMarkdownChange(
-        markdown + `\n<img src='/${fileName}' style='width:20%;display:block' />\n`,
+        markdown + `\n<img src='${fileName}' style='width:20%;display:block' />\n`,
       );
     }
   };

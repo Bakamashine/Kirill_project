@@ -95,3 +95,4 @@ build_log.txt
 img
 
 src/renderer/public/*
+dist

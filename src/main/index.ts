@@ -61,7 +61,7 @@ ipcMain.handle("editor:addImage", async () => {
 
   const isDev = !!process.env.ELECTRON_RENDERER_URL;
   const destDir = isDev
-    ? path.join(app.getAppPath(), "src", "renderer", "public")
+    ? path.join(__dirname, "../../src/renderer/public")
     : path.join(__dirname, "../renderer");
 
   await fs.mkdir(destDir, { recursive: true });

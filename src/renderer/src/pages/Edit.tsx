@@ -1,12 +1,12 @@
-import { Editor } from "@monaco-editor/react";
 import { useEffect, useState } from "react";
 import Markdown from "react-markdown";
-import { Container, Row, Col, Form } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import { recordStore } from "../stores/recordStore";
 import { useNavigate, useParams } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
+import RecordForm from "../components/RecordForm";
 
 const Edit = observer(() => {
   const [title, setTitle] = useState("");
@@ -14,13 +14,6 @@ const Edit = observer(() => {
 
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-
-  const save = async () => {
-    if (id) {
-      await recordStore.updateRecord(parseInt(id), title, markdown);
-      navigate("/");
-    }
-  };
 
   const get = async () => {
     if (id) {
@@ -30,37 +23,28 @@ const Edit = observer(() => {
     }
   };
 
+  const save = async (t: string, m: string) => {
+    if (id) {
+      await recordStore.updateRecord(parseInt(id), t, m);
+      navigate("/");
+    }
+  };
+
   useEffect(() => {
     get();
   }, [id]);
+
   return (
     <Container className="mt-4">
       <Row>
         <Col md={6}>
-          <h5>Форма:</h5>
-          <Form>
-            <Form.Group className="mb-3">
-              <Form.Label>Ваш заголовок</Form.Label>
-              <Form.Control
-                onChange={(e) => setTitle(e.target.value)}
-                value={title}
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Label>Ваша разметка (Markdown)</Form.Label>
-              <Editor
-                defaultLanguage="markdown"
-                onChange={(e) => setMarkdown(String(e))}
-                value={markdown}
-                height={400}
-              />
-            </Form.Group>
-
-            <button type="button" className="btn btn-primary" onClick={save}>
-              Сохранить
-            </button>
-          </Form>
+          <RecordForm
+            title={title}
+            markdown={markdown}
+            onTitleChange={setTitle}
+            onMarkdownChange={setMarkdown}
+            onSave={save}
+          />
         </Col>
 
         <Col md={6}>
