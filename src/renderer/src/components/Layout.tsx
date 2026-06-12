@@ -6,7 +6,7 @@ export default function Layout() {
     <>
       <section className="d-flex w-100">
         <Sidebar />
-        <main className="p-4" style={{ marginLeft: 220 }}>
+        <main className="p-4 w-75" style={{ marginLeft: 220 }}>
           <Outlet />
         </main>
       </section>

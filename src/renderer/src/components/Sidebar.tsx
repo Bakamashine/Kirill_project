@@ -28,6 +28,11 @@ const Sidebar = observer(() => {
                 Создать инструкцию
               </NavLink>
             </li>
+             <li className="nav-item">
+              <NavLink className="nav-link" end to={_Router.about}>
+                Обо мне
+              </NavLink>
+            </li>
           </ul>
 
           {recordStore.records.length > 0 && (
