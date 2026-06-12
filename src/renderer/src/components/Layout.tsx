@@ -4,9 +4,9 @@ import Sidebar from "./Sidebar";
 export default function Layout() {
   return (
     <>
-      <section className="d-flex">
+      <section className="d-flex w-100">
         <Sidebar />
-        <main className="m-5 w-100">
+        <main className="p-4" style={{ marginLeft: 220 }}>
           <Outlet />
         </main>
       </section>
