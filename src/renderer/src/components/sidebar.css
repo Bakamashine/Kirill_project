@@ -39,12 +39,16 @@ body {
   height: calc(100vh - 48px);
   padding-top: .5rem;
   overflow-x: hidden;
-  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+  overflow-y: auto;
 }
 
 .sidebar .nav-link {
   font-weight: 500;
   color: #333;
+}
+
+[data-bs-theme="dark"] .sidebar .nav-link {
+  color: #adb5bd;
 }
 
 .sidebar .nav-link .feather {
@@ -56,6 +60,10 @@ body {
   color: #2470dc;
 }
 
+[data-bs-theme="dark"] .sidebar .nav-link.active {
+  color: #6ea8fe;
+}
+
 .sidebar .nav-link:hover .feather,
 .sidebar .nav-link.active .feather {
   color: inherit;
@@ -64,4 +72,12 @@ body {
 .sidebar-heading {
   font-size: .75rem;
   text-transform: uppercase;
+}
+
+[data-bs-theme="dark"] .sidebar-heading {
+  color: #adb5bd;
+}
+
+[data-bs-theme="dark"] .sidebar {
+  box-shadow: inset -1px 0 0 rgba(255, 255, 255, .1);
 }

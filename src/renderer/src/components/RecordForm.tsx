@@ -1,6 +1,7 @@
 import { Editor } from "@monaco-editor/react";
 import { Button, Form } from "react-bootstrap";
 import { recordStore } from "../stores/recordStore";
+import { useTheme } from "../contexts/ThemeContext";
 
 interface RecordFormProps {
   title: string;
@@ -17,6 +18,8 @@ export default function RecordForm({
   onMarkdownChange,
   onSave,
 }: RecordFormProps) {
+  const { theme } = useTheme();
+
   const save = async () => {
     if (title && markdown) {
       if (onSave) {
@@ -59,6 +62,7 @@ export default function RecordForm({
         <Form.Group className="mb-3">
           <Form.Label>Ваша разметка (Markdown)</Form.Label>
           <Editor
+            theme={theme === "dark" ? "vs-dark" : "vs"}
             defaultLanguage="markdown"
             onChange={(e) => onMarkdownChange(String(e))}
             value={markdown}

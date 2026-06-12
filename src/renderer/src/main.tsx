@@ -1,5 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import App from './App';
+import { ThemeProvider } from './contexts/ThemeContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 
@@ -9,4 +10,4 @@ if (!container) {
 }
 
 const root = createRoot(container);
-root.render(<App />);
+root.render(<ThemeProvider><App /></ThemeProvider>);

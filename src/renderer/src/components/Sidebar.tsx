@@ -4,8 +4,11 @@ import { _Router } from "../App";
 import { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { recordStore } from "../stores/recordStore";
+import { useTheme } from "../contexts/ThemeContext";
 
 const Sidebar = observer(() => {
+  const { theme, toggleTheme } = useTheme();
+
   useEffect(() => {
     recordStore.fetchRecords();
   }, []);
@@ -65,6 +68,12 @@ const Sidebar = observer(() => {
             </ul>
           </>
         )}
+
+        <div className="mt-auto px-3">
+          <button className="btn btn-outline-secondary w-100 btn-sm" onClick={toggleTheme}>
+            {theme === "light" ? "Тёмная тема" : "Светлая тема"}
+          </button>
+        </div>
       </div>
     </div>
   );
