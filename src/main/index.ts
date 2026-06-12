@@ -1,6 +1,6 @@
-import { app, BrowserWindow, dialog, ipcMain } from "electron";
+import { app, BrowserWindow, dialog, ipcMain, protocol } from "electron";
 import path from "node:path";
-import fs from "node:fs/promises";
+import fs from "node:fs";
 import { getDatabase } from "./AppDatabase";
 
 let db: Awaited<ReturnType<typeof getDatabase>>;
@@ -59,20 +59,30 @@ ipcMain.handle("editor:addImage", async () => {
   const ext = path.extname(srcPath);
   const fileName = `${Date.now()}${ext}`;
 
-  const isDev = !!process.env.ELECTRON_RENDERER_URL;
-  const destDir = isDev
-    ? path.join(__dirname, "../../src/renderer/public")
-    : path.join(__dirname, "../renderer");
+  const destDir = path.join(app.getPath("userData"), "images");
 
-  await fs.mkdir(destDir, { recursive: true });
-  await fs.copyFile(srcPath, path.join(destDir, fileName));
+  await fs.promises.mkdir(destDir, { recursive: true });
+  await fs.promises.copyFile(srcPath, path.join(destDir, fileName));
 
-  return fileName;
+  return `media://images/${fileName}`;
 })
+
+protocol.registerSchemesAsPrivileged([
+  { scheme: "media", privileges: { bypassCSP: true, stream: true, supportFetchAPI: true } },
+]);
 
 app.on("ready", async () => {
   db = await getDatabase();
   createWindow();
+});
+
+app.on("ready", () => {
+  protocol.handle("media", (request) => {
+    const filePath = decodeURIComponent(request.url.slice("media://".length));
+    const fullPath = path.join(app.getPath("userData"), filePath);
+    console.log("[media] streaming:", fullPath);
+    return fs.createReadStream(fullPath);
+  });
 });
 
 app.on("window-all-closed", () => {
