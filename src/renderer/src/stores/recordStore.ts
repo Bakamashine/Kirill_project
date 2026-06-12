@@ -16,23 +16,20 @@ class RecordStore {
   }
 
   async fetchRecords() {
-    try {
-      const data = await window.electronAPI.getRecords();
-      runInAction(() => {
-        this.records = data;
-      });
-    } catch {
-      console.error("Failed to fetch records");
-    }
+    const data = await window.electronAPI.getRecords();
+    runInAction(() => {
+      this.records = data;
+    });
   }
 
   async deleteRecord(id: number) {
-    try {
-      await window.electronAPI.deleteRecord(id);
-      await this.fetchRecords();
-    } catch {
-      console.error("Failed to delete record");
-    }
+    await window.electronAPI.deleteRecord(id);
+    await this.fetchRecords();
+  }
+
+  async updateRecord(id: number, title: string, markdown: string) {
+    await window.electronAPI.updateRecord(id, title, markdown);
+    await this.fetchRecords();
   }
 }
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Markdown from "react-markdown";
-import { Container } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import { observer } from "mobx-react-lite";
 import { recordStore, IRecord } from "../stores/recordStore";
 
@@ -9,17 +9,16 @@ const Show = observer(() => {
   const { id } = useParams<{ id: string }>();
   const [record, setRecord] = useState<IRecord | null>(null);
 
+  const get = async () => {
+    if (id) setRecord(await window.electronAPI.getRecordById(parseInt(id)));
+  };
+
+  const remove = async (id: number) => {
+    await window.electronAPI.deleteRecord(id);
+  };
+
   useEffect(() => {
-    const found = recordStore.records.find((r) => r.id === Number(id));
-    if (found) {
-      setRecord(found);
-    } else {
-      (async () => {
-        await recordStore.fetchRecords();
-        const r = recordStore.records.find((x) => x.id === Number(id));
-        setRecord(r ?? null);
-      })();
-    }
+    get();
   }, [id]);
 
   if (!record) {
@@ -30,8 +29,20 @@ const Show = observer(() => {
     <Container className="mt-4">
       <h1>{record.title}</h1>
       <Markdown>{record.markdown}</Markdown>
+      <div className="d-flex p-2">
+        <Link className="m-2 btn btn-info" to={`/record/${id}`}>
+          Редактировать
+        </Link>
+        <Button
+          className="m-2"
+          variant="danger"
+          onClick={async () => remove(parseInt(id!))}
+        >
+          Удалить
+        </Button>
+      </div>
     </Container>
   );
 });
 
-export default Show
+export default Show;

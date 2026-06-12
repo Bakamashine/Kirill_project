@@ -1,5 +1,4 @@
 import { NavLink } from "react-router-dom";
-
 import "./sidebar.css";
 import { _Router } from "../App";
 import { useEffect } from "react";
@@ -12,42 +11,62 @@ const Sidebar = observer(() => {
   }, []);
 
   return (
-    <>
-      <div className="position-sticky pt-3">
-        <ul className="nav flex-column">
-          <NavLink className={"nav-link"} end to={_Router.main}>
-            Главная страница
-          </NavLink>
-          <NavLink className={"nav-link"} end to={_Router.create}>
-            Создать инструкцию
-          </NavLink>
+    <div className="sidebar d-flex flex-column">
+      <div className="sidebar-sticky">
+        <ul className="nav flex-column mb-3">
+          <li className="nav-item">
+            <NavLink className="nav-link" end to={_Router.main}>
+              Главная страница
+            </NavLink>
+          </li>
+          <li className="nav-item">
+            <NavLink className="nav-link" end to={_Router.create}>
+              Создать инструкцию
+            </NavLink>
+          </li>
+        </ul>
 
-          {recordStore.records.length > 0 && (
-            <>
+        {recordStore.records.length > 0 && (
+          <>
+            <h6 className="sidebar-heading px-3 mt-4 mb-1">Инструкции</h6>
+            <ul className="nav flex-column mb-2">
               {recordStore.records.map((item) => (
-                <NavLink
+                <li
+                  className="nav-item d-flex align-items-center"
                   key={item.id}
-                  className={"nav-link"}
-                  end
-                  to={`/record/${item.id}`}
                 >
-                  {item.title} |{" "}
-                  <a
+                  <NavLink
+                    className="nav-link flex-grow-1"
+                    end
+                    to={`/record/${item.id}`}
+                  >
+                    {item.title}
+                  </NavLink>
+                  <NavLink
+                    className="nav-link py-0 px-1 small"
+                    end
+                    to={`/record/${item.id}/edit`}
+                  >
+                    ред.
+                  </NavLink>
+                  <NavLink
+                    className="nav-link py-0 px-1 small text-danger"
+                    end
+                    to={""}
                     onClick={async (e) => {
                       e.preventDefault();
                       await recordStore.deleteRecord(item.id);
                     }}
-                    className="text-danger"
                   >
-                    Удалить
-                  </a>
-                </NavLink>
+                    удалить
+                  </NavLink>
+                </li>
               ))}
-            </>
-          )}
-        </ul>
+            </ul>
+          </>
+        )}
       </div>
-    </>
+    </div>
   );
 });
 
