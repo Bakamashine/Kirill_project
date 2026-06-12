@@ -1,8 +1,13 @@
 import { useState } from "react";
-import Markdown from "react-markdown";
+import Markdown, { defaultUrlTransform } from "react-markdown";
 import { Container, Row, Col } from "react-bootstrap";
 import rehypeRaw from "rehype-raw";
 import RecordForm from "../components/RecordForm";
+
+const urlTransform = (url: string) => {
+  if (url.startsWith("media://")) return url;
+  return defaultUrlTransform(url);
+};
 
 export default function Create() {
   const [title, setTitle] = useState("");
@@ -23,7 +28,7 @@ export default function Create() {
         <Col md={6}>
           <h5>Ваш вывод:</h5>
           <div className="markdown-border">
-            <Markdown rehypePlugins={[rehypeRaw]}>{markdown}</Markdown>
+            <Markdown rehypePlugins={[rehypeRaw]} urlTransform={urlTransform}>{markdown}</Markdown>
           </div>
         </Col>
       </Row>

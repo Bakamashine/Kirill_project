@@ -30,10 +30,11 @@ export default function RecordForm({
   };
 
   const addImage = async () => {
-    const fileName = await window.electronAPI.Editor.addImage();
-    if (fileName) {
+    const _path = await window.electronAPI.Editor.addImage();
+    console.log(_path);
+    if (_path) {
       onMarkdownChange(
-        markdown + `\n<img src='${fileName}' style='width:20%;display:block' />\n`,
+        markdown + `\n<img src='${_path}' style='width:20%;display:block' />\n`,
       );
     }
   };

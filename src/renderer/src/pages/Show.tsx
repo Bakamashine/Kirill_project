@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import Markdown from "react-markdown";
+import Markdown, { defaultUrlTransform } from "react-markdown";
 import { Button, Container } from "react-bootstrap";
 import { observer } from "mobx-react-lite";
 import { recordStore, IRecord } from "../stores/recordStore";
 import rehypeRaw from "rehype-raw";
+
+const urlTransform = (url: string) => {
+  if (url.startsWith("media://")) return url;
+  return defaultUrlTransform(url);
+};
 
 const Show = observer(() => {
   const { id } = useParams<{ id: string }>();
@@ -32,7 +37,7 @@ const Show = observer(() => {
   return (
     <Container className="mt-4">
       <h1>{record.title}</h1>
-      <Markdown rehypePlugins={[rehypeRaw]}>{record.markdown}</Markdown>
+      <Markdown rehypePlugins={[rehypeRaw]} urlTransform={urlTransform}>{record.markdown}</Markdown>
       <div className="d-flex p-2">
         <Link className="m-2 btn btn-info" to={`/record/${id}/edit`}>
           Редактировать

@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, ipcMain, protocol } from "electron";
+import { app, BrowserWindow, dialog, ipcMain, net, protocol } from "electron";
 import path from "node:path";
 import fs from "node:fs";
 import { getDatabase } from "./AppDatabase";
@@ -77,11 +77,12 @@ app.on("ready", async () => {
 });
 
 app.on("ready", () => {
-  protocol.handle("media", (request) => {
+  protocol.handle("media",  (request) => {
     const filePath = decodeURIComponent(request.url.slice("media://".length));
     const fullPath = path.join(app.getPath("userData"), filePath);
     console.log("[media] streaming:", fullPath);
-    return fs.createReadStream(fullPath);
+    // return fs.createReadStream(fullPath);
+    return net.fetch(fullPath);
   });
 });
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Markdown from "react-markdown";
+import Markdown, { defaultUrlTransform } from "react-markdown";
 import { Container, Row, Col } from "react-bootstrap";
 import { recordStore } from "../stores/recordStore";
 import { useNavigate, useParams } from "react-router-dom";
@@ -7,6 +7,11 @@ import { observer } from "mobx-react-lite";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import RecordForm from "../components/RecordForm";
+
+const urlTransform = (url: string) => {
+  if (url.startsWith("media://")) return url;
+  return defaultUrlTransform(url);
+};
 
 const Edit = observer(() => {
   const [title, setTitle] = useState("");
@@ -50,7 +55,7 @@ const Edit = observer(() => {
         <Col md={6}>
           <h5>Ваш вывод:</h5>
           <div className="markdown-border">
-            <Markdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>{markdown}</Markdown>
+            <Markdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]} urlTransform={urlTransform}>{markdown}</Markdown>
           </div>
         </Col>
       </Row>
